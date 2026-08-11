@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz — As Artes Visuais | Galeria à Meia-Noite</title>
+<style>
+  :root{
+    --bg:#0c0c11; --bg2:#14141d; --panel:#1a1a26; --panel2:#20202f;
+    --ink:#ece7db; --muted:#a49f92; --line:#2c2c3c;
+    --spot:#f0d27a; --gold:#e8c15a; --green:#2f9e6b; --green-d:#1d6b47;
+    --red:#d8433a; --blue:#3a6ea5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Segoe UI',system-ui,Arial,sans-serif;
+    background:radial-gradient(900px 500px at 50% -10%, rgba(240,210,122,.10), transparent 60%),linear-gradient(180deg,#0b0b10,#0c0c11 40%,#0a0a0f);
+    color:var(--ink);line-height:1.55}
+  a{color:var(--spot)}
+  .wrap{max-width:860px;margin:0 auto;padding:0 18px 90px}
+  header.hero{background:linear-gradient(135deg,#3a2f10,#8a6d1f);border-bottom:3px solid var(--gold);
+    padding:32px 18px 26px;text-align:center;position:relative;overflow:hidden}
+  header.hero:before{content:"";position:absolute;inset:0;background:radial-gradient(500px 220px at 50% -40%, rgba(255,255,255,.18), transparent 60%)}
+  .badge{display:inline-block;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.4);color:#fff;
+    border-radius:999px;padding:5px 14px;font-size:.78rem;letter-spacing:2px;margin-bottom:10px}
+  header.hero h1{margin:.2rem 0;font-size:1.8rem;color:#fff}
+  header.hero p{margin:.3rem auto 0;max-width:640px;color:#f6ecd2}
+  nav.tabs{position:sticky;top:0;z-index:30;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;
+    background:rgba(10,10,16,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);padding:10px}
+  nav.tabs a{text-decoration:none;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-size:.85rem;font-weight:600}
+  nav.tabs a.active{color:#0c0c11;background:var(--gold);border-color:var(--gold)}
+  .bar{position:sticky;top:52px;z-index:20;background:rgba(10,10,16,.9);padding:8px 0;margin-bottom:10px}
+  .bar .track{height:10px;background:var(--panel2);border:1px solid var(--line);border-radius:999px;overflow:hidden}
+  .bar .fill{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--green));transition:width .3s}
+  .bar .lbl{font-size:.8rem;color:var(--muted);margin-top:4px;text-align:center}
+  .q{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-left:5px solid var(--gold);
+    border-radius:14px;padding:18px 20px;margin:18px 0;box-shadow:0 10px 26px rgba(0,0,0,.3)}
+  .q .qn{display:inline-block;background:var(--gold);color:#0c0c11;font-weight:800;border-radius:8px;padding:2px 10px;font-size:.78rem;margin-bottom:8px}
+  .q h3{margin:.3rem 0 .8rem;font-size:1.12rem;color:#fff;font-weight:600}
+  .opt{display:block;border:1px solid var(--line);border-radius:10px;padding:11px 14px;margin:8px 0;cursor:pointer;transition:.15s;background:var(--panel2)}
+  .opt:hover{border-color:var(--gold)}
+  .opt.sel{border-color:var(--gold);background:rgba(232,193,90,.14)}
+  .opt input{margin-right:10px}
+  .opt.correct{border-color:var(--green);background:rgba(47,158,107,.16)}
+  .opt.wrong{border-color:var(--red);background:rgba(216,67,58,.12)}
+  .expl{display:none;margin-top:10px;border-radius:10px;padding:11px 14px;font-size:.93rem}
+  .expl.show{display:block}
+  .expl.ok{background:rgba(47,158,107,.12);border:1px solid var(--green-d)}
+  .expl.no{background:rgba(120,120,120,.12);border:1px solid #555}
+  .expl b{color:var(--spot)}
+  .finish{background:var(--panel);border:1px solid var(--gold);border-radius:16px;padding:22px;margin:26px 0;text-align:center}
+  .btn{cursor:pointer;border:none;border-radius:10px;font-weight:800;padding:13px 22px;font-size:1rem}
+  .btn-gold{background:var(--gold);color:#0c0c11}
+  .btn-gold:disabled{background:#3a3a48;color:#7d7d8c;cursor:not-allowed}
+  .code{font-size:1.6rem;font-weight:900;letter-spacing:3px;color:var(--gold);margin:10px 0}
+  .keybox{display:none;margin-top:16px}
+  .keybox.show{display:block}
+  .keybox input{font-size:1.1rem;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:10px;border-radius:9px;
+    border:1px solid var(--line);background:#0f0f16;color:var(--ink);width:180px}
+  .note{color:var(--muted);font-size:.9rem}
+  .saas{position:fixed;right:14px;bottom:14px;z-index:50;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:10px 12px;font-size:.8rem;box-shadow:0 10px 24px rgba(0,0,0,.5);max-width:250px}
+  .saas .st{color:var(--muted);margin-bottom:6px}.saas .st b{color:var(--green)}
+  .saas button{font-size:.75rem;padding:6px 8px;margin:2px;border-radius:7px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);cursor:pointer}
+  .saas button:hover{border-color:var(--gold)}
+  .ov{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+  .ov.show{display:flex}
+  .mdl{background:var(--panel);border:1px solid var(--gold);border-radius:14px;max-width:420px;width:100%;padding:22px}
+  .mdl h4{margin:.2rem 0 .6rem;color:var(--gold)}
+  .mdl .row{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+  .mdl textarea{width:100%;min-height:120px;background:#0f0f16;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px}
+  footer.next{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:24px}
+  footer.next a{flex:1;text-align:center;min-width:200px;text-decoration:none;font-weight:700;background:var(--gold);color:#0c0c11;border-radius:12px;padding:14px}
+  footer.next a.ghost{background:transparent;border:1px solid var(--line);color:var(--muted)}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="badge">🖼️ GALERIA À MEIA-NOITE · SALA DO QUIZ</div>
+  <h1>Quiz — As Artes Visuais</h1>
+  <p>15 perguntas de múltipla escolha. Ao terminar, você recebe um <b>código MED</b> para mostrar a um responsável — só com ele o gabarito comentado abre.</p>
+</header>
+<nav class="tabs">
+  <a href="leitura-guiada.html">📖 Leitura Guiada</a>
+  <a class="active" href="quiz.html">🎯 Quiz</a>
+  <a href="resumo.html">🗺️ Resumo</a>
+  <a href="simulado.html">📝 Simulado</a>
+  <a href="index.html">🏛️ Início</a>
+</nav>
+<div class="wrap">
+  <div class="bar"><div class="track"><div class="fill" id="fill"></div></div><div class="lbl" id="lbl">0 de 15 respondidas</div></div>
+  <div id="quiz"></div>
+
+  <div class="finish" id="finish">
+    <button class="btn btn-gold" id="btnFin" disabled>Finalizar quiz</button>
+    <p class="note" id="finNote" style="margin-top:10px">Responda todas as 15 perguntas para finalizar.</p>
+    <div id="result" style="display:none">
+      <p>✅ Você terminou! Seu código de liberação é:</p>
+      <div class="code" id="codeTxt">MED-00-XX</div>
+      <p class="note">Mostre este código para um responsável. Ele digita abaixo para abrir o gabarito comentado.</p>
+      <div class="keybox show" id="keybox">
+        <input id="keyInput" maxlength="9" placeholder="MED-00-XX">
+        <br><button class="btn btn-gold" style="margin-top:10px" id="btnKey">Abrir gabarito</button>
+        <p class="note" id="keyMsg"></p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="next">
+    <a class="ghost" href="leitura-guiada.html">← 📖 Leitura Guiada</a>
+    <a href="resumo.html">Próximo: 🗺️ Resumo →</a>
+  </footer>
+</div>
+
+<div class="saas">
+  <div class="st">💾 Salvo automaticamente<br><b id="stStatus">—</b></div>
+  <button onclick="QZ.export()">📥 Exportar</button>
+  <button onclick="QZ.import()">📤 Importar</button>
+  <button onclick="QZ.reset()">🗑️ Zerar</button>
+</div>
+<div class="ov" id="ov"><div class="mdl"><h4 id="mdlTitle">Aviso</h4><div id="mdlBody"></div><div class="row" id="mdlRow"></div></div></div>
+
+<script>
+(function(){
+  "use strict";
+  var QUESTIONS=[
+    {q:"O artista Wassily Kandinsky dizia que \"tudo começa num ponto\". Por que o ponto é considerado o elemento visual mais simples?",
+     o:["Porque só pode ser usado na pintura","Porque a partir dele já se pode iniciar uma obra, e a linha nasce de vários pontos","Porque é sempre colorido","Porque só existe em obras modernas"],a:1,
+     e:["O ponto pode aparecer em qualquer expressão visual, não só na pintura.","Certo! De um único ponto já se pode começar, e uma linha é uma sequência de pontos.","O ponto não precisa ser colorido para existir.","O ponto é usado em todas as épocas da arte."]},
+    {q:"As formas geométricas SÓLIDAS (ou espaciais) diferem das planas porque:",
+     o:["São sempre maiores","Têm três dimensões (incluem a profundidade), como esfera, cone e pirâmide","Só existem em preto e branco","Não podem ser desenhadas"],a:1,
+     e:["O tamanho não define se é plana ou sólida.","Certo! Sólidas têm 3 dimensões (esfera, cone, pirâmide); planas têm 2 (círculo, quadrado...).","Formas sólidas podem ter qualquer cor.","Formas sólidas podem, sim, ser representadas no desenho."]},
+    {q:"O estilo art nouveau, surgido na França no fim do século XIX, se caracteriza por usar:",
+     o:["Apenas formas geométricas","Formas orgânicas, inspiradas em plantas, flores e na natureza","Somente cores neutras","Só esculturas de metal"],a:1,
+     e:["O art nouveau é conhecido justamente pelas formas livres.","Certo! Ele se inspirava na natureza — flores e folhas — em janelas, grades e móveis.","O art nouveau é muito colorido, não se limita a neutras.","Ele aparece em vários materiais, não só metal."]},
+    {q:"A textura é o elemento visual que desperta principalmente os sentidos da:",
+     o:["Audição e olfato","Visão e tato","Visão e paladar","Audição e tato"],a:1,
+     e:["Textura não se liga ao som nem ao cheiro.","Certo! A textura pode ser vista e sentida (lisa, áspera, ondulada, macia).","O paladar não tem relação com textura visual.","A audição não faz parte da textura."]},
+    {q:"A cor-LUZ é formada pela emissão direta de luz. Qual é o seu sistema de cores?",
+     o:["CMY (ciano, magenta, amarelo)","RGB (vermelho, verde, azul)","Preto e branco","Primárias e neutras"],a:1,
+     e:["CMY é o sistema da cor-pigmento (tintas).","Certo! Cor-luz (arco-íris, telas) usa o RGB: red, green, blue.","Cor-luz é cheia de cores, não só preto e branco.","Esses termos não formam um sistema de cor-luz."]},
+    {q:"A cor-PIGMENTO é a cor da matéria (tintas, lápis, giz). Qual é o seu sistema?",
+     o:["RGB (vermelho, verde, azul)","CMY (ciano, magenta, amarelo)","Só cores quentes","Somente cores neutras"],a:1,
+     e:["RGB é o sistema da cor-luz (telas, arco-íris).","Certo! Cor-pigmento usa o CMY: ciano, magenta e amarelo.","O sistema não se limita a cores quentes.","O sistema não se limita a neutras."]},
+    {q:"Quais são as três cores PRIMÁRIAS?",
+     o:["Laranja, verde e violeta","Vermelho, amarelo e azul","Preto, branco e cinza","Ciano, magenta e amarelo"],a:1,
+     e:["Essas são as cores secundárias.","Certo! Vermelho, amarelo e azul não nascem de misturas — por isso são primárias (puras).","Essas são as cores neutras.","Esse é o sistema CMY da cor-pigmento, não as primárias tradicionais."]},
+    {q:"As cores SECUNDÁRIAS são formadas pela mistura de:",
+     o:["Uma primária com uma neutra","Duas cores primárias","Uma cor com branco","Três cores terciárias"],a:1,
+     e:["Misturar com neutra muda o tom, não cria secundária.","Certo! Duas primárias formam laranja, verde e violeta.","Adicionar branco cria tons, não secundárias.","Terciárias vêm depois, não formam as secundárias."]},
+    {q:"São chamadas cores NEUTRAS:",
+     o:["Vermelho, amarelo e azul","Preto, branco e cinza","Laranja, verde e violeta","Ciano, magenta e amarelo"],a:1,
+     e:["Essas são as primárias.","Certo! Preto, branco e cinza são neutras — não interferem nas outras cores.","Essas são as secundárias.","Esse é o sistema CMY."]},
+    {q:"Sobre a temperatura das cores, é correto afirmar que:",
+     o:["As frias passam alegria e aproximam a imagem","As quentes passam alegria e parecem aproximar; as frias passam calma e parecem afastar","Quentes e frias têm o mesmo efeito","As quentes afastam e as frias aproximam"],a:1,
+     e:["Passar alegria e aproximar é característica das quentes.","Certo! Quentes (vermelho, laranja, amarelo) aproximam; frias (verde, azul, violeta) afastam.","Elas têm efeitos diferentes.","É o contrário: quentes aproximam, frias afastam."]},
+    {q:"As cores COMPLEMENTARES (ou opostas) são aquelas que:",
+     o:["Estão próximas no círculo cromático","Ficam em lados opostos do círculo e têm alto contraste","São sempre neutras","Só existem no sistema RGB"],a:1,
+     e:["Cores próximas no círculo são as análogas.","Certo! Opostas/complementares ficam frente a frente e criam forte contraste (ex.: amarelo e violeta).","Complementares não são neutras.","Elas existem no círculo cromático das cores-pigmento também."]},
+    {q:"Uma pintura feita com UMA única cor, usando variação de tons, é chamada de:",
+     o:["Policromia","Monocromia","Isocromia","Cor-luz"],a:1,
+     e:["Policromia usa muitas cores (4 ou mais).","Certo! Monocromia = uma cor só, com variação de tons.","Isocromia é harmonia entre cores complementares diferentes.","Cor-luz é um tipo de cor, não uma harmonia."]},
+    {q:"A XILOGRAVURA é um tipo de gravura muito ligada à cultura popular do Nordeste. Sua matriz é feita de:",
+     o:["Metal","Madeira","Vidro","Tecido"],a:1,
+     e:["Gravura em metal existe, mas não é a xilogravura.","Certo! Xilo = madeira. A matriz de madeira é gravada e usada como carimbo.","Vidro não é usado como matriz de xilogravura.","Tecido não é a matriz da xilogravura."]},
+    {q:"No PONTILHISMO, como o de Paul Signac, a imagem é criada:",
+     o:["Com uma única linha contínua","Com pontinhos de cor bem próximos que, de longe, formam a figura","Só com cores neutras","Esculpindo a madeira"],a:1,
+     e:["O pontilhismo usa pontos, não uma linha só.","Certo! Muitos pontinhos de cor lado a lado formam a imagem quando vista de longe.","O pontilhismo é bem colorido.","Isso descreve a xilogravura, não o pontilhismo."]},
+    {q:"A performance, como a de Marina Abramović, é uma expressão contemporânea que se caracteriza por:",
+     o:["Ser uma pintura a óleo","Ser uma ação artística com o corpo do artista, que dura o tempo da ação","Ser uma escultura de bronze","Ser uma gravura em madeira"],a:1,
+     e:["Performance não é pintura.","Certo! Na performance o artista usa o próprio corpo e a obra acontece durante a ação.","Escultura de bronze é tridimensional, não performance.","Gravura em madeira é xilogravura, não performance."]}
+  ];
+
+  var KEY="quiz_artes6_galeria_v1";
+  var mem={};
+  function load(){ try{return JSON.parse(localStorage.getItem(KEY))||{};}catch(e){return mem;} }
+  function save(d){ try{localStorage.setItem(KEY,JSON.stringify(d));}catch(e){mem=d;} }
+  var data=load();
+  if(!data.ans) data.ans={};
+  function stamp(){ var el=document.getElementById('stStatus');var d=new Date();
+    el.textContent=d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR').slice(0,5); }
+
+  var ov=document.getElementById('ov'),mT=document.getElementById('mdlTitle'),mB=document.getElementById('mdlBody'),mR=document.getElementById('mdlRow');
+  function modal(o){ mT.textContent=o.title||'Aviso';mB.innerHTML=o.body||'';mR.innerHTML='';
+    (o.buttons||[{t:'OK'}]).forEach(function(b){var btn=document.createElement('button');btn.className='btn btn-gold';
+      if(!b.primary){btn.style.background='var(--panel2)';btn.style.color='var(--ink)';btn.style.border='1px solid var(--line)';}
+      btn.style.padding='9px 16px';btn.style.fontSize='.92rem';btn.textContent=b.t;
+      btn.onclick=function(){if(b.fn)b.fn();if(!b.keep)ov.classList.remove('show');};mR.appendChild(btn);});
+    ov.classList.add('show'); }
+  ov.addEventListener('click',function(e){if(e.target===ov)ov.classList.remove('show');});
+
+  var qDiv=document.getElementById('quiz');
+  QUESTIONS.forEach(function(item,i){
+    var el=document.createElement('div');el.className='q';el.id='q'+i;
+    var html='<span class="qn">PERGUNTA '+(i+1)+'</span><h3>'+item.q+'</h3>';
+    item.o.forEach(function(op,j){
+      html+='<label class="opt" data-i="'+i+'" data-j="'+j+'"><input type="radio" name="q'+i+'" value="'+j+'">'+op+'</label>';
+    });
+    item.o.forEach(function(op,j){
+      html+='<div class="expl '+(j===item.a?'ok':'no')+'" data-e="'+i+'-'+j+'"><b>'+(j===item.a?'✔ Correta: ':'✘ ')+'</b>'+item.e[j]+'</div>';
+    });
+    el.innerHTML=html; qDiv.appendChild(el);
+  });
+
+  function refresh(){
+    var n=0;
+    QUESTIONS.forEach(function(item,i){
+      if(data.ans[i]!=null){ n++;
+        var r=document.querySelector('input[name="q'+i+'"][value="'+data.ans[i]+'"]'); if(r)r.checked=true;
+        document.querySelectorAll('#q'+i+' .opt').forEach(function(o){o.classList.toggle('sel',o.getAttribute('data-j')==data.ans[i]);});
+      }
+    });
+    document.getElementById('fill').style.width=(n/QUESTIONS.length*100)+'%';
+    document.getElementById('lbl').textContent=n+' de '+QUESTIONS.length+' respondidas';
+    document.getElementById('btnFin').disabled=(n<QUESTIONS.length);
+    document.getElementById('finNote').textContent=(n<QUESTIONS.length)?('Faltam '+(QUESTIONS.length-n)+' pergunta(s).'):'Tudo respondido! Pode finalizar.';
+  }
+  qDiv.addEventListener('change',function(e){
+    if(e.target && e.target.name){ var i=+e.target.name.slice(1); data.ans[i]=+e.target.value; save(data); stamp();
+      document.querySelectorAll('#q'+i+' .opt').forEach(function(o){o.classList.toggle('sel',o.getAttribute('data-j')==data.ans[i]);});
+      refresh(); }
+  });
+
+  function randLetters(){ var L="ABCDEFGHJKLMNPQRSTUVWXYZ"; return L[Math.floor(Math.random()*L.length)]+L[Math.floor(Math.random()*L.length)]; }
+  function score(){ var s=0; QUESTIONS.forEach(function(it,i){ if(data.ans[i]===it.a)s++; }); return s; }
+
+  function showResult(){
+    document.getElementById('btnFin').style.display='none';
+    document.getElementById('finNote').style.display='none';
+    document.getElementById('result').style.display='block';
+    if(!data.code){ var s=score(); var xx=('0'+s).slice(-2); data.code='MED-'+xx+'-'+randLetters(); save(data); }
+    document.getElementById('codeTxt').textContent=data.code;
+    if(data.unlocked) unlock();
+  }
+  document.getElementById('btnFin').addEventListener('click',showResult);
+
+  function unlock(){
+    data.unlocked=true; save(data);
+    document.getElementById('keyMsg').innerHTML='<b style="color:var(--green)">✔ Gabarito liberado!</b> Você acertou '+score()+' de '+QUESTIONS.length+'.';
+    QUESTIONS.forEach(function(it,i){
+      var chosen=data.ans[i];
+      document.querySelectorAll('#q'+i+' .opt').forEach(function(o){
+        var j=+o.getAttribute('data-j');
+        if(j===it.a)o.classList.add('correct');
+        if(j===chosen && j!==it.a)o.classList.add('wrong');
+      });
+      var ce=document.querySelector('[data-e="'+i+'-'+it.a+'"]'); if(ce)ce.classList.add('show');
+      if(chosen!=null && chosen!==it.a){ var we=document.querySelector('[data-e="'+i+'-'+chosen+'"]'); if(we)we.classList.add('show'); }
+    });
+  }
+  document.getElementById('btnKey').addEventListener('click',function(){
+    var v=document.getElementById('keyInput').value.trim().toUpperCase();
+    if(v===data.code){ unlock(); }
+    else { document.getElementById('keyMsg').innerHTML='<span style="color:var(--red)">Código incorreto. Confira as letras (sem espaços).</span>'; }
+  });
+
+  window.QZ={
+    export:function(){var txt=JSON.stringify(data,null,2);
+      modal({title:'📥 Exportar',body:'<p class="note">Copie e guarde. Para restaurar, use Importar.</p><textarea id="expA" readonly>'+txt.replace(/</g,'&lt;')+'</textarea>',
+        buttons:[{t:'Copiar',primary:true,keep:true,fn:function(){var ta=document.getElementById('expA');ta.select();try{document.execCommand('copy');}catch(e){}}},{t:'Fechar'}]});},
+    import:function(){modal({title:'📤 Importar',body:'<p class="note">Cole o texto exportado.</p><textarea id="impA"></textarea>',
+      buttons:[{t:'Confirmar',primary:true,fn:function(){try{data=JSON.parse(document.getElementById('impA').value);save(data);location.reload();}catch(e){modal({title:'Ops',body:'<p>Texto inválido.</p>'});}}},{t:'Cancelar'}]});},
+    reset:function(){modal({title:'🗑️ Zerar tudo',body:'<p>Isso apaga suas respostas e o código deste quiz. Continuar?</p>',
+      buttons:[{t:'Sim, zerar',primary:true,fn:function(){data={ans:{}};save(data);location.reload();}},{t:'Cancelar'}]});}
+  };
+
+  refresh(); stamp();
+  if(data.code){ showResult(); }
+})();
+</script>
+</body>
+</html>

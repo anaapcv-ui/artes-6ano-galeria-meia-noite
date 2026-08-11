@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resumo — As Artes Visuais | Galeria à Meia-Noite</title>
+<style>
+  :root{
+    --bg:#0c0c11;--bg2:#14141d;--panel:#1a1a26;--panel2:#20202f;
+    --ink:#ece7db;--muted:#a49f92;--line:#2c2c3c;--spot:#f0d27a;--gold:#e8c15a;
+    --green:#2f9e6b;--red:#d8433a;--postit:#f3d95b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Segoe UI',system-ui,Arial,sans-serif;
+    background:radial-gradient(900px 500px at 50% -10%, rgba(240,210,122,.10), transparent 60%),linear-gradient(180deg,#0b0b10,#0c0c11 40%,#0a0a0f);
+    color:var(--ink);line-height:1.55}
+  a{color:var(--spot)}
+  .wrap{max-width:940px;margin:0 auto;padding:0 18px 90px}
+  header.hero{background:linear-gradient(135deg,#241a3a,#4a2f6b);border-bottom:3px solid var(--gold);
+    padding:32px 18px 26px;text-align:center;position:relative;overflow:hidden}
+  header.hero:before{content:"";position:absolute;inset:0;background:radial-gradient(500px 220px at 50% -40%, rgba(255,255,255,.16), transparent 60%)}
+  .badge{display:inline-block;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:999px;padding:5px 14px;font-size:.78rem;letter-spacing:2px;margin-bottom:10px}
+  header.hero h1{margin:.2rem 0;font-size:1.8rem;color:#fff}
+  header.hero p{margin:.3rem auto 0;max-width:640px;color:#efe6ff}
+  nav.tabs{position:sticky;top:0;z-index:30;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;background:rgba(10,10,16,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);padding:10px}
+  nav.tabs a{text-decoration:none;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-size:.85rem;font-weight:600}
+  nav.tabs a.active{color:#0c0c11;background:var(--gold);border-color:var(--gold)}
+  .sec{margin:30px 0 10px}
+  .sec h2{color:var(--gold);font-size:1.35rem;border-left:5px solid var(--gold);padding-left:12px;margin-bottom:4px}
+  .sec .sub{color:var(--muted);padding-left:17px;font-size:.92rem}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:14px}
+  .flip{background:transparent;perspective:1000px;height:180px;cursor:pointer}
+  .flip .inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+  .flip.on .inner{transform:rotateY(180deg)}
+  .flip .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;padding:16px;display:flex;flex-direction:column;justify-content:center;border:1px solid var(--line)}
+  .flip .front{background:linear-gradient(180deg,var(--panel),var(--bg2));border-left:5px solid var(--gold)}
+  .flip .front .t{font-size:1.15rem;font-weight:800;color:#fff}
+  .flip .front .h{color:var(--muted);font-size:.85rem;margin-top:8px}
+  .flip .back{background:linear-gradient(180deg,#122019,#0f1a14);border-left:5px solid var(--green);transform:rotateY(180deg);color:var(--ink);font-size:.98rem}
+  .flip .back b{color:var(--spot)}
+  .tag{position:absolute;top:8px;right:10px;font-size:.7rem;color:var(--muted)}
+  .postit{background:var(--postit);color:#3a2f05;border-radius:6px;padding:14px 16px;margin:16px 0;
+    box-shadow:0 8px 20px rgba(0,0,0,.4);transform:rotate(-1deg);font-weight:600}
+  .postit b{color:#6b4e05}
+  .alert{background:rgba(216,67,58,.1);border:1px solid var(--red);border-left:5px solid var(--red);border-radius:10px;padding:12px 16px;margin:16px 0}
+  .alert b{color:#ff9a91}
+  .tblbox{overflow-x:auto;margin:16px 0}
+  table{border-collapse:collapse;width:100%;min-width:460px;background:var(--panel);border-radius:10px;overflow:hidden}
+  th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;font-size:.95rem}
+  th{background:var(--panel2);color:var(--gold)}
+  .gloss{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:24px 0}
+  .gloss h2{color:var(--gold);margin-top:0}
+  .gloss dt{font-weight:800;color:var(--spot);margin-top:12px}
+  .gloss dd{margin:2px 0 0;color:var(--ink)}
+  .revline{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--muted);margin-top:8px}
+  .revline input{width:16px;height:16px}
+  footer.next{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:26px}
+  footer.next a{flex:1;text-align:center;min-width:200px;text-decoration:none;font-weight:700;background:var(--gold);color:#0c0c11;border-radius:12px;padding:14px}
+  footer.next a.ghost{background:transparent;border:1px solid var(--line);color:var(--muted)}
+  .saas{position:fixed;right:14px;bottom:14px;z-index:50;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:.8rem;box-shadow:0 10px 24px rgba(0,0,0,.5);max-width:250px}
+  .saas .st{color:var(--muted);margin-bottom:6px}.saas .st b{color:var(--green)}
+  .saas button{font-size:.75rem;padding:6px 8px;margin:2px;border-radius:7px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);cursor:pointer}
+  .saas button:hover{border-color:var(--gold)}
+  .ov{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+  .ov.show{display:flex}
+  .mdl{background:var(--panel);border:1px solid var(--gold);border-radius:14px;max-width:420px;width:100%;padding:22px}
+  .mdl h4{margin:.2rem 0 .6rem;color:var(--gold)}.mdl .row{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+  .mdl textarea{width:100%;min-height:120px;background:#0f0f16;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px}
+  .mdl button{cursor:pointer;border-radius:9px;font-weight:700;padding:9px 16px;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+  .prog{color:var(--muted);font-size:.9rem;text-align:center;margin-top:10px}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="badge">🖼️ GALERIA À MEIA-NOITE · SALA DO RESUMO</div>
+  <h1>Resumo — As Artes Visuais</h1>
+  <p>Clique nas <b>cartas</b> para virar e ver a explicação. Fixe as dicas dos post-its e cuidado com as pegadinhas em vermelho.</p>
+</header>
+<nav class="tabs">
+  <a href="leitura-guiada.html">📖 Leitura Guiada</a>
+  <a href="quiz.html">🎯 Quiz</a>
+  <a class="active" href="resumo.html">🗺️ Resumo</a>
+  <a href="simulado.html">📝 Simulado</a>
+  <a href="index.html">🏛️ Início</a>
+</nav>
+<div class="wrap">
+  <div class="prog" id="prog">Cartas viradas: 0</div>
+
+  <div class="sec"><h2>🔵 Sala 1 — Elementos visuais</h2><div class="sub">Ponto · linha · forma · textura</div></div>
+  <div class="grid" id="g1"></div>
+  <div class="postit"><b>📌 Dica:</b> Kandinsky = "tudo começa num ponto". A <b>linha</b> nasce de vários pontos.</div>
+  <div class="alert"><b>⚠️ Pegadinha:</b> forma <b>plana</b> = 2 dimensões (círculo, quadrado, triângulo, retângulo). Forma <b>sólida/espacial</b> = 3 dimensões (esfera, cone, pirâmide).</div>
+
+  <div class="sec"><h2>🟡 Sala 2 — As cores (luz × pigmento)</h2><div class="sub">RGB × CMY · classificações</div></div>
+  <div class="grid" id="g2"></div>
+  <div class="tblbox">
+    <table>
+      <tr><th>Tipo</th><th>De onde vem</th><th>Sistema</th><th>Exemplos</th></tr>
+      <tr><td><b>Cor-luz</b></td><td>Emissão direta de luz</td><td><b>RGB</b> (vermelho, verde, azul)</td><td>Arco-íris, prisma, tela</td></tr>
+      <tr><td><b>Cor-pigmento</b></td><td>Cor da matéria</td><td><b>CMY</b> (ciano, magenta, amarelo)</td><td>Tinta, lápis, giz</td></tr>
+    </table>
+  </div>
+  <div class="tblbox">
+    <table>
+      <tr><th>Classificação</th><th>O que é</th></tr>
+      <tr><td><b>Primárias</b></td><td>Vermelho, amarelo e azul (não vêm de mistura)</td></tr>
+      <tr><td><b>Secundárias</b></td><td>Duas primárias: laranja, verde e violeta</td></tr>
+      <tr><td><b>Terciárias</b></td><td>Uma primária + uma secundária</td></tr>
+      <tr><td><b>Neutras</b></td><td>Preto, branco e cinza</td></tr>
+    </table>
+  </div>
+  <div class="postit"><b>📌 Dica:</b> Cor-<b>luz</b> = tela e arco-íris = <b>RGB</b>. Cor-<b>pigmento</b> = tinta = <b>CMY</b>.</div>
+
+  <div class="sec"><h2>🟠 Sala 3 — Relações de cor</h2><div class="sub">Temperatura · harmonias</div></div>
+  <div class="grid" id="g3"></div>
+  <div class="tblbox">
+    <table>
+      <tr><th>Quentes 🔥</th><th>Frias ❄️</th></tr>
+      <tr><td>Vermelho, laranja, amarelo</td><td>Verde, azul, violeta</td></tr>
+      <tr><td>Alegria · aproximam a imagem</td><td>Calma/tristeza · afastam a imagem</td></tr>
+    </table>
+  </div>
+  <div class="alert"><b>⚠️ Pegadinha:</b> <b>Monocromia</b> = uma cor (com tons). <b>Policromia</b> = 4 cores ou mais. <b>Isocromia</b> = harmonia com cores complementares.</div>
+
+  <div class="sec"><h2>🟢 Sala 4 — Expressões visuais</h2><div class="sub">Desenho · gravura · pintura · volume</div></div>
+  <div class="grid" id="g4"></div>
+  <div class="postit"><b>📌 Dica:</b> <b>Bidimensional</b> = largura e comprimento (desenho, pintura). <b>Tridimensional</b> = tem volume (escultura — Camille Claudel).</div>
+
+  <div class="sec"><h2>🟣 Sala 5 — Arte em movimento e contemporânea</h2><div class="sub">Tradição × invenção · performance · instalação · vídeo</div></div>
+  <div class="grid" id="g5"></div>
+
+  <div class="sec"><h2>⚪ Sala 6 — Arte, ciência e cidade</h2><div class="sub">Homem vitruviano · espaço urbano</div></div>
+  <div class="grid" id="g6"></div>
+
+  <div class="gloss">
+    <h2>📚 Galeria dos artistas (quem é quem)</h2>
+    <dl>
+      <dt>Wassily Kandinsky (1866–1944)</dt><dd>"Tudo começa num ponto." Obra: <i>Pintura com borda branca</i> (1913).</dd>
+      <dt>Leonardo da Vinci (1452–1519)</dt><dd>Renascimento. Estudos de anatomia com hachuras e o <i>Homem vitruviano</i> (proporções, círculo e quadrado).</dd>
+      <dt>Albrecht Dürer (1471–1528)</dt><dd>Renascimento alemão. Desenho de tradição. Obra: <i>Anunciação</i> (1526).</dd>
+      <dt>Julia Panadés (1978–)</dt><dd>Desenho contemporâneo com tecido e bordado. Obra: <i>Vestido filosófico</i> (2015).</dd>
+      <dt>Camille Claudel (1864–1943)</dt><dd>Escultora francesa — arte tridimensional.</dd>
+      <dt>Paul Signac (1863–1935) e Georges Seurat (1859–1891)</dt><dd>Pontilhismo — pontinhos de cor. Ciência das cores.</dd>
+      <dt>Marina Abramović (1946–)</dt><dd>Performance. Obra: <i>Carregando o esqueleto</i> (2008).</dd>
+      <dt>Cildo Meireles (1948–)</dt><dd>Instalação. Obra: <i>Através</i> (1983–89).</dd>
+      <dt>Rosana Paulino (1967–)</dt><dd>Videoinstalação (arte brasileira contemporânea).</dd>
+      <dt>Marcelle Louzada</dt><dd>Performer — intervenções urbanas em São Paulo (2023–24), arte e afetos na cidade.</dd>
+    </dl>
+  </div>
+
+  <footer class="next">
+    <a class="ghost" href="quiz.html">← 🎯 Quiz</a>
+    <a href="simulado.html">Próximo: 📝 Simulado →</a>
+  </footer>
+</div>
+
+<div class="saas">
+  <div class="st">💾 Salvo automaticamente<br><b id="stStatus">—</b></div>
+  <button onclick="RS.export()">📥 Exportar</button>
+  <button onclick="RS.import()">📤 Importar</button>
+  <button onclick="RS.reset()">🗑️ Zerar</button>
+</div>
+<div class="ov" id="ov"><div class="mdl"><h4 id="mdlTitle">Aviso</h4><div id="mdlBody"></div><div class="row" id="mdlRow"></div></div></div>
+
+<script>
+(function(){
+  "use strict";
+  var CARDS={
+    g1:[
+      {t:"Ponto",h:"Elemento mais simples",b:"O elemento visual mais simples. <b>Kandinsky</b>: 'tudo começa num ponto'. A obra pode nascer de um único ponto."},
+      {t:"Linha",h:"Sequência de pontos",b:"Curva, reta ou diagonal. Passa emoções diferentes. Ex.: <b>grafismos aborígenes</b> (pontos, linhas, cores e texturas)."},
+      {t:"Forma",h:"Orgânica × geométrica",b:"<b>Orgânica</b> = livre, da natureza (art nouveau). <b>Geométrica</b> = plana (2D) ou sólida (3D)."},
+      {t:"Textura",h:"Visão e tato",b:"Superfícies: <b>lisa, áspera, ondulada, macia</b>. Desperta os sentidos da visão e do tato."}
+    ],
+    g2:[
+      {t:"Cor-luz",h:"Sistema RGB",b:"Formada pela <b>emissão direta de luz</b> (arco-íris, tela). Sistema <b>RGB</b>: red, green, blue."},
+      {t:"Cor-pigmento",h:"Sistema CMY",b:"É a <b>cor da matéria</b> (tinta, lápis, giz). Sistema <b>CMY</b>: ciano, magenta, amarelo."},
+      {t:"Círculo cromático",h:"Organiza as cores",b:"Mostra como as cores se combinam: primárias, secundárias e terciárias; quentes e frias."},
+      {t:"Tons",h:"Variações de uma cor",b:"Adicionando branco ou preto aos poucos, criam-se tons mais claros ou mais escuros da mesma cor."}
+    ],
+    g3:[
+      {t:"Cores análogas",h:"Próximas no círculo",b:"Ficam <b>lado a lado</b> no círculo. Combinam com suavidade (ex.: amarelo e laranja)."},
+      {t:"Complementares",h:"Opostas no círculo",b:"Ficam em <b>lados opostos</b>, alto contraste (ex.: amarelo e violeta; vermelho e verde)."},
+      {t:"Monocromia",h:"Uma cor só",b:"Uma única cor com <b>variação de tons</b>."},
+      {t:"Policromia",h:"Muitas cores",b:"<b>4 ou mais</b> cores harmônicas juntas."}
+    ],
+    g4:[
+      {t:"Desenho",h:"Da Vinci · hachuras",b:"Base de muitas obras. Da Vinci usou <b>hachuras</b> (linhas) para dar volume nos estudos de anatomia."},
+      {t:"Gravura",h:"Matriz = carimbo",b:"Feita a partir de uma <b>matriz</b> gravada que repete a imagem, como um carimbo."},
+      {t:"Xilogravura",h:"Matriz de madeira",b:"Matriz de <b>madeira</b>. Muito forte na <b>cultura popular do Nordeste</b>."},
+      {t:"Pontilhismo",h:"Signac e Seurat",b:"Imagem feita de <b>pontinhos de cor</b> que, de longe, formam a figura."}
+    ],
+    g5:[
+      {t:"Dürer × Panadés",h:"Tradição × invenção",b:"<b>Dürer</b> = desenho do Renascimento. <b>Panadés</b> = desenho contemporâneo com tecido e bordado."},
+      {t:"Performance",h:"Marina Abramović",b:"Ação artística com o <b>corpo</b> do artista; dura o tempo da ação."},
+      {t:"Instalação",h:"Cildo Meireles",b:"A obra <b>ocupa um espaço</b> e o público <b>entra e interage</b>."},
+      {t:"Vídeo / videoarte",h:"Rosana Paulino",b:"Usa a <b>imagem em movimento</b> como material de arte (videoinstalação)."}
+    ],
+    g6:[
+      {t:"Homem vitruviano",h:"Arte + ciência",b:"Da Vinci uniu arte, matemática e anatomia: <b>proporções</b> do corpo com círculo e quadrado."},
+      {t:"Arte no espaço urbano",h:"Marcelle Louzada",b:"Performances e intervenções na cidade criam <b>afetos</b> e convívio na comunidade."}
+    ]
+  };
+  var KEY="resumo_artes6_galeria_v1";
+  var mem={};
+  function load(){try{return JSON.parse(localStorage.getItem(KEY))||{};}catch(e){return mem;}}
+  function save(d){try{localStorage.setItem(KEY,JSON.stringify(d));}catch(e){mem=d;}}
+  var data=load(); if(!data.flip)data.flip={};
+  function stamp(){var el=document.getElementById('stStatus');var d=new Date();el.textContent=d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR').slice(0,5);}
+
+  var ov=document.getElementById('ov'),mT=document.getElementById('mdlTitle'),mB=document.getElementById('mdlBody'),mR=document.getElementById('mdlRow');
+  function modal(o){mT.textContent=o.title||'Aviso';mB.innerHTML=o.body||'';mR.innerHTML='';
+    (o.buttons||[{t:'OK'}]).forEach(function(b){var btn=document.createElement('button');btn.textContent=b.t;
+      if(b.primary){btn.style.background='var(--gold)';btn.style.color='#0c0c11';}
+      btn.onclick=function(){if(b.fn)b.fn();if(!b.keep)ov.classList.remove('show');};mR.appendChild(btn);});
+    ov.classList.add('show');}
+  ov.addEventListener('click',function(e){if(e.target===ov)ov.classList.remove('show');});
+
+  function countFlips(){var n=0;for(var k in data.flip){if(data.flip[k])n++;}document.getElementById('prog').textContent='Cartas viradas: '+n;}
+
+  Object.keys(CARDS).forEach(function(gid){
+    var g=document.getElementById(gid);
+    CARDS[gid].forEach(function(c,i){
+      var id=gid+'-'+i;
+      var el=document.createElement('div');el.className='flip';el.setAttribute('data-id',id);
+      el.innerHTML='<div class="inner">'+
+        '<div class="face front"><span class="tag">clique p/ virar</span><div class="t">'+c.t+'</div><div class="h">'+c.h+'</div></div>'+
+        '<div class="face back">'+c.b+'</div></div>';
+      if(data.flip[id]) el.classList.add('on');
+      el.addEventListener('click',function(){el.classList.toggle('on');data.flip[id]=el.classList.contains('on');save(data);stamp();countFlips();});
+      g.appendChild(el);
+    });
+  });
+
+  window.RS={
+    export:function(){var txt=JSON.stringify(data,null,2);
+      modal({title:'📥 Exportar',body:'<p style="color:var(--muted);font-size:.9rem">Copie e guarde.</p><textarea id="expA" readonly>'+txt.replace(/</g,'&lt;')+'</textarea>',
+        buttons:[{t:'Copiar',primary:true,keep:true,fn:function(){var ta=document.getElementById('expA');ta.select();try{document.execCommand('copy');}catch(e){}}},{t:'Fechar'}]});},
+    import:function(){modal({title:'📤 Importar',body:'<textarea id="impA" placeholder="Cole aqui..."></textarea>',
+      buttons:[{t:'Confirmar',primary:true,fn:function(){try{data=JSON.parse(document.getElementById('impA').value);save(data);location.reload();}catch(e){modal({title:'Ops',body:'<p>Texto inválido.</p>'});}}},{t:'Cancelar'}]});},
+    reset:function(){modal({title:'🗑️ Zerar',body:'<p>Desvirar todas as cartas?</p>',
+      buttons:[{t:'Sim',primary:true,fn:function(){data={flip:{}};save(data);location.reload();}},{t:'Cancelar'}]});}
+  };
+  countFlips(); stamp();
+})();
+</script>
+</body>
+</html>

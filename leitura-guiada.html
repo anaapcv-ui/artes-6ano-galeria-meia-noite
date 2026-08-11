@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leitura Guiada — As Artes Visuais | Galeria à Meia-Noite</title>
+<style>
+  :root{
+    --bg:#0c0c11; --bg2:#14141d; --panel:#1a1a26; --panel2:#20202f;
+    --ink:#ece7db; --muted:#a49f92; --line:#2c2c3c;
+    --spot:#f0d27a; --spot2:#e8c15a; --green:#2f9e6b; --green-d:#1d6b47;
+    --gold:#e8c15a; --red:#d8433a;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:'Segoe UI',system-ui,Arial,sans-serif;
+    background:
+      radial-gradient(900px 500px at 50% -10%, rgba(240,210,122,.10), transparent 60%),
+      linear-gradient(180deg,#0b0b10,#0c0c11 40%,#0a0a0f);
+    color:var(--ink); line-height:1.6;
+  }
+  a{color:var(--spot)}
+  .wrap{max-width:900px;margin:0 auto;padding:0 18px 80px}
+
+  /* Cabeçalho (Leitura Guiada = verde) */
+  header.hero{
+    background:linear-gradient(135deg,var(--green-d),var(--green));
+    border-bottom:3px solid var(--gold);
+    padding:34px 18px 30px; text-align:center; position:relative; overflow:hidden;
+  }
+  header.hero:before{
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(500px 220px at 50% -40%, rgba(255,255,255,.25), transparent 60%);
+  }
+  .badge{display:inline-block;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.4);
+    color:#fff;border-radius:999px;padding:5px 14px;font-size:.8rem;letter-spacing:2px;margin-bottom:10px}
+  header.hero h1{margin:.2rem 0;font-size:1.9rem;color:#fff;letter-spacing:.5px}
+  header.hero p{margin:.3rem auto 0;max-width:640px;color:#eafff4}
+
+  /* Navegação (ordem fixa) */
+  nav.tabs{position:sticky;top:0;z-index:30;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;
+    background:rgba(10,10,16,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);padding:10px}
+  nav.tabs a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-size:.85rem;font-weight:600}
+  nav.tabs a.active{color:#0c0c11;background:var(--gold);border-color:var(--gold)}
+
+  .intro{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin:24px 0}
+  .intro h2{margin:.2rem 0;color:var(--gold)}
+
+  /* Sala / bloco */
+  .sala{
+    background:linear-gradient(180deg,var(--panel),var(--bg2));
+    border:1px solid var(--line);border-left:5px solid var(--gold);
+    border-radius:16px;padding:22px 22px 20px;margin:22px 0;
+    box-shadow:0 12px 30px rgba(0,0,0,.35);position:relative;
+  }
+  .sala:before{content:"";position:absolute;top:-1px;left:40px;width:120px;height:6px;
+    background:linear-gradient(90deg,transparent,var(--spot),transparent);border-radius:6px;filter:blur(1px)}
+  .sala .num{display:inline-block;background:var(--gold);color:#0c0c11;font-weight:800;
+    border-radius:8px;padding:2px 10px;font-size:.8rem;margin-bottom:6px;letter-spacing:1px}
+  .sala h3{margin:.3rem 0 .6rem;font-size:1.35rem;color:#fff}
+  .sala h4{color:var(--spot);margin:1.1rem 0 .2rem}
+  .sala p{margin:.55rem 0}
+  .obra{background:var(--panel2);border:1px dashed var(--line);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:.95rem}
+  .obra b{color:var(--gold)}
+  .term{color:var(--gold);font-weight:700}
+
+  /* Pare e pense */
+  .pense{margin-top:16px;background:rgba(47,158,107,.10);border:1px solid var(--green);border-radius:12px;padding:14px 16px}
+  .pense .cab{display:flex;align-items:center;gap:8px;font-weight:800;color:#7fe3b4;margin-bottom:8px}
+  .pense label{display:block;font-size:.92rem;margin:10px 0 4px;color:var(--ink)}
+  .pense textarea{width:100%;min-height:60px;resize:vertical;background:#0f0f16;color:var(--ink);
+    border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-family:inherit;font-size:.95rem}
+  .pense textarea:focus{outline:none;border-color:var(--green)}
+  .btn{cursor:pointer;border:none;border-radius:9px;font-weight:700;padding:9px 16px;font-size:.92rem}
+  .btn-green{background:var(--green);color:#fff;margin-top:10px}
+  .btn-green:disabled{background:#3a3a48;color:#7d7d8c;cursor:not-allowed}
+  .modelo{display:none;margin-top:12px;background:#0f1a14;border:1px solid var(--green-d);border-radius:10px;padding:12px 14px}
+  .modelo.show{display:block}
+  .modelo .mt{color:#7fe3b4;font-weight:800;margin-bottom:4px}
+  .auto{margin-top:10px;font-size:.9rem;color:var(--muted)}
+  .auto b{color:var(--spot)}
+  .auto .op{display:inline-block;border:1px solid var(--line);border-radius:8px;padding:4px 10px;margin:4px 6px 0 0;cursor:pointer}
+  .auto .op.sel{background:var(--gold);color:#0c0c11;border-color:var(--gold);font-weight:700}
+
+  /* Linha do tempo */
+  .timeline{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;margin:26px 0}
+  .timeline h3{color:var(--gold);margin-top:0}
+  .tl{position:relative;margin-top:10px;padding-left:8px}
+  .tl:before{content:"";position:absolute;left:14px;top:0;bottom:0;width:3px;
+    background:linear-gradient(180deg,var(--gold),var(--green))}
+  .tlitem{position:relative;padding:8px 0 8px 40px;cursor:pointer}
+  .tlitem .dot{position:absolute;left:6px;top:14px;width:18px;height:18px;border-radius:50%;
+    background:var(--bg);border:3px solid var(--gold)}
+  .tlitem .yr{font-weight:800;color:var(--spot)}
+  .tlitem .ev{color:var(--ink)}
+  .tlitem small{color:var(--muted)}
+  .tlitem:hover .ev{color:#fff}
+
+  /* Pegadinhas */
+  .traps{background:linear-gradient(180deg,#241a12,#1a130d);border:1px solid #6b4e22;border-radius:16px;padding:20px;margin:26px 0}
+  .traps h3{color:var(--gold);margin-top:0}
+  .trap{border-left:4px solid var(--red);background:rgba(216,67,58,.08);border-radius:8px;padding:10px 14px;margin:12px 0}
+  .trap b{color:#ff9a91}
+
+  footer.next{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:30px}
+  footer.next a{flex:1;text-align:center;min-width:200px;text-decoration:none;font-weight:700;
+    background:var(--gold);color:#0c0c11;border-radius:12px;padding:14px}
+  footer.next a.ghost{background:transparent;border:1px solid var(--line);color:var(--muted)}
+
+  /* Painel salvamento */
+  .saas{position:fixed;right:14px;bottom:14px;z-index:50;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:10px 12px;font-size:.8rem;box-shadow:0 10px 24px rgba(0,0,0,.5);max-width:250px}
+  .saas .st{color:var(--muted);margin-bottom:6px}
+  .saas .st b{color:var(--green)}
+  .saas button{font-size:.75rem;padding:6px 8px;margin:2px;border-radius:7px;border:1px solid var(--line);
+    background:var(--panel2);color:var(--ink);cursor:pointer}
+  .saas button:hover{border-color:var(--gold)}
+
+  /* Modal */
+  .ov{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+  .ov.show{display:flex}
+  .mdl{background:var(--panel);border:1px solid var(--gold);border-radius:14px;max-width:420px;width:100%;padding:22px}
+  .mdl h4{margin:.2rem 0 .6rem;color:var(--gold)}
+  .mdl .row{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+  .mdl textarea{width:100%;min-height:120px;background:#0f0f16;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px}
+  @media(max-width:560px){header.hero h1{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="badge">🖼️ GALERIA À MEIA-NOITE · SALA DE LEITURA</div>
+  <h1>Leitura Guiada — As Artes Visuais</h1>
+  <p>Módulo 2 · 6º ano · Colégio São José. A galeria está escura. A cada sala, um <b>spot</b> acende sobre uma obra. Leia, observe e responda antes de seguir.</p>
+</header>
+
+<nav class="tabs">
+  <a class="active" href="leitura-guiada.html">📖 Leitura Guiada</a>
+  <a href="quiz.html">🎯 Quiz</a>
+  <a href="resumo.html">🗺️ Resumo</a>
+  <a href="simulado.html">📝 Simulado</a>
+  <a href="index.html">🏛️ Início</a>
+</nav>
+
+<div class="wrap">
+  <div class="intro">
+    <h2>Como usar esta sala</h2>
+    <p>Leia cada sala com calma. No fim de cada uma há um <b style="color:#7fe3b4">Pare e pense</b>: escreva sua resposta com suas palavras (o botão só libera quando você preenche tudo). Depois compare com a <b>resposta modelo</b> e se avalie. Seu texto fica salvo sozinho — pode fechar e voltar.</p>
+  </div>
+
+  <!-- SALA 1 -->
+  <section class="sala" id="s1">
+    <span class="num">SALA 1</span>
+    <h3>Os elementos visuais: ponto e linha</h3>
+    <p>As artes visuais têm <span class="term">elementos básicos</span> que o artista usa para criar. O mais simples de todos é o <span class="term">ponto</span>. O pintor russo <b>Wassily Kandinsky</b> (1866–1944) dizia que <i>"tudo começa num ponto"</i> — ou seja, uma obra pode nascer de um único ponto no papel ou na tela.</p>
+    <p>A <span class="term">linha</span> é uma sequência de pontos. Ela pode ser <b>curva, reta ou diagonal</b>. Dependendo de como o artista traça, a linha passa emoções diferentes: linhas nervosas e espontâneas mostram gestos rápidos; linhas caprichadas passam calma. Um exemplo são os <b>grafismos aborígenes</b> (grafismo = uso de pontos, linhas, cores e texturas numa composição), feitos por povos indígenas da Austrália.</p>
+    <div class="obra">🎨 <b>Obra-chave:</b> <i>Pintura com borda branca</i> (1913), de <b>Kandinsky</b> — uma tela com pontos, linhas e formas geométricas soltas, que lembram elementos da natureza.</div>
+    <div class="pense" data-q="q1">
+      <div class="cab">🟢 Pare e pense</div>
+      <label>1) Por que se pode dizer que o ponto é o elemento mais simples das artes visuais?</label>
+      <textarea data-f="q1a" placeholder="Escreva com suas palavras..."></textarea>
+      <label>2) Que diferença uma linha curva e uma linha reta podem passar numa obra?</label>
+      <textarea data-f="q1b" placeholder="Escreva com suas palavras..."></textarea>
+      <button class="btn btn-green" disabled>Conferir resposta modelo</button>
+      <div class="modelo">
+        <div class="mt">Resposta modelo</div>
+        <p>1) Porque a partir de um único ponto já é possível iniciar uma obra — Kandinsky dizia "tudo começa num ponto". Além disso, a linha nasce de vários pontos juntos.</p>
+        <p>2) A linha reta costuma passar firmeza e ordem; a curva passa suavidade e movimento. O jeito de traçar transmite a emoção do gesto.</p>
+        <div class="auto">Como foi sua resposta? <span class="op" data-v="acertei">✔ Acertei</span><span class="op" data-v="mais ou menos">➖ Mais ou menos</span><span class="op" data-v="preciso revisar">↺ Preciso revisar</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SALA 2 -->
+  <section class="sala" id="s2">
+    <span class="num">SALA 2</span>
+    <h3>Forma e textura</h3>
+    <p>A <span class="term">forma</span> é o contorno que deixa a gente reconhecer o desenho. As formas podem ser <b>orgânicas</b> (livres, ligadas à natureza — folhas, flores, animais) ou <b>geométricas</b> (com fundamento matemático).</p>
+    <p>As <span class="term">formas geométricas planas</span> têm duas dimensões (largura e comprimento): <b>círculo, quadrado, triângulo e retângulo</b>. As <span class="term">formas geométricas sólidas (ou espaciais)</span> têm três dimensões (largura, comprimento e profundidade): <b>esfera, pirâmide e cone</b>. Um estilo cheio de formas orgânicas é o <b>art nouveau</b> ("arte nova", da França no fim do século XIX), que se inspirava em plantas e flores para criar janelas, grades e móveis.</p>
+    <p>A <span class="term">textura</span> é o que desperta os sentidos da visão e do tato. As superfícies podem ser <b>lisas, ásperas, onduladas ou macias</b>, entre outras.</p>
+    <div class="pense" data-q="q2">
+      <div class="cab">🟢 Pare e pense</div>
+      <label>1) Qual a diferença entre uma forma geométrica plana e uma sólida? Dê um exemplo de cada.</label>
+      <textarea data-f="q2a" placeholder="Escreva com suas palavras..."></textarea>
+      <label>2) Cite duas texturas diferentes e onde você poderia encontrá-las.</label>
+      <textarea data-f="q2b" placeholder="Escreva com suas palavras..."></textarea>
+      <button class="btn btn-green" disabled>Conferir resposta modelo</button>
+      <div class="modelo">
+        <div class="mt">Resposta modelo</div>
+        <p>1) A plana tem 2 dimensões (largura e comprimento), como o círculo, quadrado, triângulo e retângulo. A sólida tem 3 dimensões (inclui a profundidade), como a esfera, a pirâmide e o cone.</p>
+        <p>2) Exemplos: lisa (vidro), áspera (lixa/parede de tijolo), ondulada (papelão), macia (algodão). Qualquer par com o local certo vale.</p>
+        <div class="auto">Como foi sua resposta? <span class="op" data-v="acertei">✔ Acertei</span><span class="op" data-v="mais ou menos">➖ Mais ou menos</span><span class="op" data-v="preciso revisar">↺ Preciso revisar</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SALA 3 -->
+  <section class="sala" id="s3">
+    <span class="num">SALA 3</span>
+    <h3>As cores: cor-luz (RGB) × cor-pigmento (CMY)</h3>
+    <p>Existem dois jeitos de a cor aparecer. A <span class="term">cor-luz</span> é formada pela <b>emissão direta de luz</b>. Exemplos: o arco-íris, o prisma, a tela do celular e da TV. O sistema da cor-luz é o <b>RGB</b> (do inglês <i>red, green, blue</i> = vermelho, verde e azul).</p>
+    <p>A <span class="term">cor-pigmento</span> é a <b>cor da matéria</b> — tintas, lápis, giz. Ela aparece quando a luz bate no objeto e ele reflete uma cor. O sistema da cor-pigmento é o <b>CMY</b> (<i>cyan, magenta, yellow</i> = ciano, magenta e amarelo).</p>
+    <div class="obra">💡 <b>Dica de prova:</b> cor-<b>luz</b> = tela e arco-íris = <b>RGB</b>. Cor-<b>pigmento</b> = tinta = <b>CMY</b>. Não troque as siglas!</div>
+    <div class="pense" data-q="q3">
+      <div class="cab">🟢 Pare e pense</div>
+      <label>1) Qual a diferença entre cor-luz e cor-pigmento? Dê um exemplo de cada.</label>
+      <textarea data-f="q3a" placeholder="Escreva com suas palavras..."></textarea>
+      <label>2) A qual sistema pertence a tela do computador: RGB ou CMY? Por quê?</label>
+      <textarea data-f="q3b" placeholder="Escreva com suas palavras..."></textarea>
+      <button class="btn btn-green" disabled>Conferir resposta modelo</button>
+      <div class="modelo">
+        <div class="mt">Resposta modelo</div>
+        <p>1) Cor-luz vem da emissão direta de luz (arco-íris, tela) e usa o RGB. Cor-pigmento é a cor da matéria (tintas, lápis) e usa o CMY.</p>
+        <p>2) RGB, porque a tela emite luz — é cor-luz (red, green, blue).</p>
+        <div class="auto">Como foi sua resposta? <span class="op" data-v="acertei">✔ Acertei</span><span class="op" data-v="mais ou menos">➖ Mais ou menos</span><span class="op" data-v="preciso revisar">↺ Preciso revisar</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SALA 4 -->
+  <section class="sala" id="s4">
+    <span class="num">SALA 4</span>
+    <h3>Classificando as cores no círculo cromático</h3>
+    <p>O <span class="term">círculo cromático</span> organiza as cores e ajuda a entender como elas se combinam. Nele encontramos:</p>
+    <p>• <span class="term">Cores primárias</span> (ou puras): <b>vermelho, amarelo e azul</b>. Não nascem da mistura de outras.<br>
+    • <span class="term">Cores secundárias</span>: a soma de duas primárias — <b>laranja, verde e violeta</b>.<br>
+    • <span class="term">Cores terciárias</span>: a mistura de uma primária com uma secundária (mudando a proporção).<br>
+    • <span class="term">Cores neutras</span>: <b>preto, branco e cinza</b> — não "brigam" com as outras numa composição.</p>
+    <p>Os <span class="term">tons</span> são as variações de uma cor: se você adiciona branco ou preto aos poucos, cria tons mais claros ou mais escuros da mesma cor.</p>
+    <div class="pense" data-q="q4">
+      <div class="cab">🟢 Pare e pense</div>
+      <label>1) Quais são as três cores primárias e por que elas têm esse nome?</label>
+      <textarea data-f="q4a" placeholder="Escreva com suas palavras..."></textarea>
+      <label>2) Como se formam as cores secundárias? Dê um exemplo (qual + qual = qual).</label>
+      <textarea data-f="q4b" placeholder="Escreva com suas palavras..."></textarea>
+      <button class="btn btn-green" disabled>Conferir resposta modelo</button>
+      <div class="modelo">
+        <div class="mt">Resposta modelo</div>
+        <p>1) Vermelho, amarelo e azul. São chamadas primárias (ou puras) porque não são formadas pela mistura de outras cores.</p>
+        <p>2) Pela soma de duas primárias. Exemplo: azul + amarelo = verde (ou vermelho + amarelo = laranja; vermelho + azul = violeta).</p>
+        <div class="auto">Como foi sua resposta? <span class="op" data-v="acertei">✔ Acertei</span><span class="op" data-v="mais ou menos">➖ Mais ou menos</span><span class="op" data-v="preciso revisar">↺ Preciso revisar</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SALA 5 -->
+  <section class="sala" id="s5">
+    <span class="num">SALA 5</span>
+    <h3>Relações entre cores: temperatura e harmonias</h3>
+    <p>As <span class="term">cores análogas</span> estão <b>próximas</b> no círculo cromático e combinam com suavidade (ex.: amarelo e laranja). As <span class="term">cores opostas ou complementares</span> ficam em <b>lados opostos</b> e têm alto contraste (ex.: amarelo e violeta; vermelho e verde; azul e laranja).</p>
+    <p>As <span class="term">cores quentes</span> (vermelho, laranja, amarelo) lembram o sol e o fogo, passam <b>alegria</b> e parecem <b>aproximar</b> a imagem. As <span class="term">cores frias</span> (verde, azul, violeta) lembram o frio, passam <b>calma/tristeza</b> e parecem <b>afastar</b> a imagem.</p>
+    <p>Sobre a quantidade de cores numa obra:<br>
+    • <span class="term">Monocromia</span>: uma cor só, com variação de tons.<br>
+    • <span class="term">Policromia</span>: muitas cores harmônicas juntas (sempre <b>4 ou mais</b>).<br>
+    • <span class="term">Isocromia</span>: harmonia com cores diferentes que se completam (uma é complementar da outra e por isso não aparece na composição da outra).</p>
+    <div class="pense" data-q="q5">
+      <div class="cab">🟢 Pare e pense</div>
+      <label>1) O que diferencia monocromia de policromia?</label>
+      <textarea data-f="q5a" placeholder="Escreva com suas palavras..."></textarea>
+      <label>2) As cores quentes têm que efeito numa imagem? E as frias?</label>
+      <textarea data-f="q5b" placeholder="Escreva com suas palavras..."></textarea>
+      <button class="btn btn-green" disabled>Conferir resposta modelo</button>
+      <div class="modelo">
+        <div class="mt">Resposta modelo</div>
+        <p>1) Monocromia usa uma única cor com variação de tons; policromia usa muitas cores harmônicas juntas (4 ou mais).</p>
+        <p>2) As quentes passam alegria e parecem aproximar/aumentar a imagem; as frias passam calma ou tristeza e parecem afastar a imagem.</p>
+        <div class="auto">Como foi sua resposta? <span class="op" data-v="acertei">✔ Acertei</span><span class="op" data-v="mais ou menos">➖ Mais ou menos</span><span class="op" data-v="preciso revisar">↺ Preciso revisar</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SALA 6 -->
+  <section class="sala" id="s6">
+    <span class="num">SALA 6</span>
+    <h3>Expressões visuais: desenho, gravura, pintura e volume</h3>
+    <p>O <span class="term">desenho</span> é a base de muitas obras. <b>Leonardo da Vinci</b> (1452–1519), mestre do Renascimento, fez estudos de anatomia com linhas claras e <b>hachuras</b> (conjuntos de linhas) para dar sensação de volume.</p>
+    <p>A <span class="term">gravura</span> é feita a partir de uma <b>matriz</b> (uma placa gravada) que serve como carimbo para repetir a imagem. A <span class="term">xilogravura</span> usa uma <b>matriz de madeira</b> e é muito forte na <b>cultura popular do Nordeste</b>.</p>
+    <p>Obras podem ser <span class="term">bidimensionais</span> (largura e comprimento — desenho, pintura, gravura) ou <span class="term">tridimensionais</span> (têm volume — a <b>escultura</b>). A escultora francesa <b>Camille Claudel</b> (1864–1943) é um exemplo de arte tridimensional. No <span class="term">pontilhismo</span>, o artista faz a imagem com <b>pontinhos de cor</b> bem juntos que, de longe, formam a figura — como <b>Paul Signac</b> em <i>St. Tropez, o caminho de costume</i> (1905).</p>
+    <div class="pense" data-q="q6">
+      <div class="cab">🟢 Pare e pense</div>
+      <label>1) O que é a matriz na gravura? E o que muda na xilogravura?</label>
+      <textarea data-f="q6a" placeholder="Escreva com suas palavras..."></textarea>
+      <label>2) Explique a diferença entre uma obra bidimensional e uma tridimensional.</label>
+      <textarea data-f="q6b" placeholder="Escreva com suas palavras..."></textarea>
+      <button class="btn btn-green" disabled>Conferir resposta modelo</button>
+      <div class="modelo">
+        <div class="mt">Resposta modelo</div>
+        <p>1) A matriz é a placa gravada que funciona como carimbo para repetir a imagem. Na xilogravura essa matriz é de madeira (muito usada na cultura popular do Nordeste).</p>
+        <p>2) A bidimensional tem só largura e comprimento (desenho, pintura); a tridimensional também tem profundidade/volume (escultura).</p>
+        <div class="auto">Como foi sua resposta? <span class="op" data-v="acertei">✔ Acertei</span><span class="op" data-v="mais ou menos">➖ Mais ou menos</span><span class="op" data-v="preciso revisar">↺ Preciso revisar</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SALA 7 -->
+  <section class="sala" id="s7">
+    <span class="num">SALA 7</span>
+    <h3>Arte em movimento: tradição e invenção</h3>
+    <p>O desenho segue vivo e mudando com o tempo. <b>Albrecht Dürer</b> (1471–1528) foi um artista do <b>Renascimento</b> na Alemanha, reconhecido pela excelência técnica de seus desenhos, gravuras e aquarelas — sua obra <i>Anunciação</i> (1526) traz um tema religioso.</p>
+    <p>Séculos depois, a artista mineira <b>Julia Panadés</b> (1978–) explora o desenho de forma contemporânea: usa <b>tecidos, bordados, aquarela, nanquim</b> e mistura o desenho das formas com o desenho das palavras. O tema feminino aparece bastante — como em <i>Vestido filosófico</i> (2015).</p>
+    <p>Comparar Dürer e Panadés mostra como uma mesma linguagem (o desenho) <b>muda com a época, os materiais e o contexto</b> de cada artista.</p>
+    <div class="pense" data-q="q7">
+      <div class="cab">🟢 Pare e pense</div>
+      <label>1) Dürer e Panadés usam a mesma linguagem (o desenho). O que muda de um para o outro?</label>
+      <textarea data-f="q7a" placeholder="Escreva com suas palavras..."></textarea>
+      <label>2) Cite um material tradicional e um material não convencional usados nesses desenhos.</label>
+      <textarea data-f="q7b" placeholder="Escreva com suas palavras..."></textarea>
+      <button class="btn btn-green" disabled>Conferir resposta modelo</button>
+      <div class="modelo">
+        <div class="mt">Resposta modelo</div>
+        <p>1) Muda a época (Renascimento × arte contemporânea), os materiais e o contexto. Dürer usa técnicas clássicas; Panadés experimenta materiais novos e mistura desenho com palavras.</p>
+        <p>2) Tradicional: lápis, caneta, nanquim, giz. Não convencional: linha, agulha, recortes, tecidos, bordado.</p>
+        <div class="auto">Como foi sua resposta? <span class="op" data-v="acertei">✔ Acertei</span><span class="op" data-v="mais ou menos">➖ Mais ou menos</span><span class="op" data-v="preciso revisar">↺ Preciso revisar</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SALA 8 -->
+  <section class="sala" id="s8">
+    <span class="num">SALA 8</span>
+    <h3>Expressões contemporâneas: performance, instalação e vídeo</h3>
+    <p>A <span class="term">arte contemporânea</span> é a que está sendo feita no nosso tempo. Ela gosta de experimentar materiais e misturar linguagens.</p>
+    <p>• <span class="term">Performance</span>: uma ação artística em que o artista usa o próprio corpo, e a obra dura o tempo da ação. Referência mundial: <b>Marina Abramović</b> (<i>Carregando o esqueleto</i>, 2008).<br>
+    • <span class="term">Instalação</span>: a obra ocupa e transforma um espaço, e o público entra e interage. Exemplo: <b>Cildo Meireles</b>, <i>Através</i> (1983–89).<br>
+    • <span class="term">Vídeo / videoarte / videoinstalação</span>: usa a imagem em movimento como material de arte. A brasileira <b>Rosana Paulino</b> trabalha com videoinstalação.</p>
+    <div class="pense" data-q="q8">
+      <div class="cab">🟢 Pare e pense</div>
+      <label>1) O que caracteriza uma performance? Quem é uma referência mundial dessa arte?</label>
+      <textarea data-f="q8a" placeholder="Escreva com suas palavras..."></textarea>
+      <label>2) Na instalação, qual é o papel do público?</label>
+      <textarea data-f="q8b" placeholder="Escreva com suas palavras..."></textarea>
+      <button class="btn btn-green" disabled>Conferir resposta modelo</button>
+      <div class="modelo">
+        <div class="mt">Resposta modelo</div>
+        <p>1) A performance é uma ação artística com o corpo do artista, que dura o tempo da ação. Referência: Marina Abramović.</p>
+        <p>2) O público entra no espaço da obra e interage com ela — não fica só olhando de fora; faz parte da experiência.</p>
+        <div class="auto">Como foi sua resposta? <span class="op" data-v="acertei">✔ Acertei</span><span class="op" data-v="mais ou menos">➖ Mais ou menos</span><span class="op" data-v="preciso revisar">↺ Preciso revisar</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SALA 9 -->
+  <section class="sala" id="s9">
+    <span class="num">SALA 9</span>
+    <h3>Arte e ciência · Arte no espaço urbano</h3>
+    <p>Arte e ciência caminham juntas. <b>Leonardo da Vinci</b> uniu arte, matemática e anatomia no <span class="term">Homem vitruviano</span> (por volta de 1492), um estudo das <b>proporções humanas</b> baseado no <b>círculo e no quadrado</b>. Já os franceses <b>Georges Seurat</b> (1859–1891) e <b>Paul Signac</b> (1863–1935) estudaram a ciência das cores no pontilhismo.</p>
+    <p>A arte também acontece na cidade. Em 2023 e 2024, a <span class="term">performer</span> <b>Marcelle Louzada</b> fez <b>intervenções urbanas</b> em São Paulo, transformando ruas com performances (como celebrar o Dia Mundial da Dança). Isso mostra como a arte pode mudar nossa relação com o <b>espaço urbano</b> e criar <b>afetos</b> e convívio na comunidade.</p>
+    <div class="pense" data-q="q9">
+      <div class="cab">🟢 Pare e pense</div>
+      <label>1) Por que o Homem vitruviano é um bom exemplo de arte e ciência juntas?</label>
+      <textarea data-f="q9a" placeholder="Escreva com suas palavras..."></textarea>
+      <label>2) Como uma performance no espaço urbano pode mudar a relação das pessoas com a cidade?</label>
+      <textarea data-f="q9b" placeholder="Escreva com suas palavras..."></textarea>
+      <button class="btn btn-green" disabled>Conferir resposta modelo</button>
+      <div class="modelo">
+        <div class="mt">Resposta modelo</div>
+        <p>1) Porque une arte com matemática e anatomia: estuda as proporções do corpo humano usando o círculo e o quadrado.</p>
+        <p>2) Ela transforma o espaço comum (ruas), aproxima as pessoas, cria afetos e convívio, e faz a comunidade olhar a cidade de outro jeito.</p>
+        <div class="auto">Como foi sua resposta? <span class="op" data-v="acertei">✔ Acertei</span><span class="op" data-v="mais ou menos">➖ Mais ou menos</span><span class="op" data-v="preciso revisar">↺ Preciso revisar</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LINHA DO TEMPO -->
+  <div class="timeline">
+    <h3>🕰️ Linha do tempo da Galeria (clique num marco para ir até a sala)</h3>
+    <div class="tl">
+      <div class="tlitem" data-go="s6"><span class="dot"></span><span class="yr">c. 1492</span> — <span class="ev">Leonardo da Vinci: <i>Homem vitruviano</i> e estudos de anatomia (Renascimento)</span><br><small>Arte + ciência · desenho e hachuras</small></div>
+      <div class="tlitem" data-go="s7"><span class="dot"></span><span class="yr">1526</span> — <span class="ev">Albrecht Dürer: <i>Anunciação</i> (Renascimento alemão)</span><br><small>Tradição do desenho</small></div>
+      <div class="tlitem" data-go="s2"><span class="dot"></span><span class="yr">fim do séc. XIX</span> — <span class="ev">Art nouveau na França (formas orgânicas)</span><br><small>Forma</small></div>
+      <div class="tlitem" data-go="s6"><span class="dot"></span><span class="yr">1905</span> — <span class="ev">Paul Signac: <i>St. Tropez, o caminho de costume</i> (pontilhismo)</span><br><small>Ciência das cores · Seurat e Signac</small></div>
+      <div class="tlitem" data-go="s1"><span class="dot"></span><span class="yr">1913</span> — <span class="ev">Wassily Kandinsky: <i>Pintura com borda branca</i></span><br><small>Ponto, linha e forma</small></div>
+      <div class="tlitem" data-go="s8"><span class="dot"></span><span class="yr">1983–89</span> — <span class="ev">Cildo Meireles: <i>Através</i> (instalação)</span><br><small>Arte contemporânea</small></div>
+      <div class="tlitem" data-go="s8"><span class="dot"></span><span class="yr">2008</span> — <span class="ev">Marina Abramović: <i>Carregando o esqueleto</i> (performance)</span><br><small>Arte contemporânea</small></div>
+      <div class="tlitem" data-go="s7"><span class="dot"></span><span class="yr">2015</span> — <span class="ev">Julia Panadés: <i>Vestido filosófico</i> (desenho contemporâneo)</span><br><small>Invenção · tecido e bordado</small></div>
+      <div class="tlitem" data-go="s9"><span class="dot"></span><span class="yr">2023–24</span> — <span class="ev">Marcelle Louzada: intervenções urbanas em São Paulo</span><br><small>Arte, cidade e afetos</small></div>
+    </div>
+  </div>
+
+  <!-- PEGADINHAS -->
+  <div class="traps">
+    <h3>⚠️ 8 pegadinhas que a prova adora</h3>
+    <div class="trap"><b>1.</b> Cor-<b>luz</b> é RGB (tela, arco-íris). Cor-<b>pigmento</b> é CMY (tinta). Não inverta as siglas.</div>
+    <div class="trap"><b>2.</b> Cores <b>secundárias</b> = laranja, verde e violeta (duas primárias). Cores <b>terciárias</b> = primária + secundária. Cuidado para não confundir.</div>
+    <div class="trap"><b>3.</b> <b>Quentes aproximam</b> e passam alegria; <b>frias afastam</b> e passam calma/tristeza. A prova troca isso de propósito.</div>
+    <div class="trap"><b>4.</b> <b>Monocromia</b> = uma cor só (com tons). <b>Policromia</b> = 4 cores ou mais. Não misture os nomes.</div>
+    <div class="trap"><b>5.</b> Formas <b>planas</b> = 2 dimensões (círculo, quadrado...). Formas <b>sólidas/espaciais</b> = 3 dimensões (esfera, cone, pirâmide).</div>
+    <div class="trap"><b>6.</b> <b>Xilogravura</b> = matriz de <b>madeira</b> (Nordeste). Não é qualquer gravura — a madeira é a marca dela.</div>
+    <div class="trap"><b>7.</b> <b>Performance</b> usa o corpo do artista; <b>instalação</b> ocupa o espaço e o público entra. São coisas diferentes.</div>
+    <div class="trap"><b>8.</b> <b>Kandinsky</b> = "tudo começa num ponto". <b>Da Vinci</b> = Homem vitruviano. <b>Signac</b> = pontilhismo. Ligue cada artista à sua ideia.</div>
+  </div>
+
+  <footer class="next">
+    <a class="ghost" href="index.html">🏛️ Voltar ao início</a>
+    <a href="quiz.html">Próximo: 🎯 Quiz →</a>
+  </footer>
+</div>
+
+<!-- Painel de salvamento -->
+<div class="saas">
+  <div class="st">💾 Salvo automaticamente<br><b id="stStatus">—</b></div>
+  <button onclick="LG.export()">📥 Exportar</button>
+  <button onclick="LG.import()">📤 Importar</button>
+  <button onclick="LG.reset()">🗑️ Zerar</button>
+</div>
+
+<!-- Modal -->
+<div class="ov" id="ov">
+  <div class="mdl">
+    <h4 id="mdlTitle">Aviso</h4>
+    <div id="mdlBody"></div>
+    <div class="row" id="mdlRow"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var KEY="lg_artes6_galeria_v1";
+  var mem={}; // reserva se localStorage falhar
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){ return mem; } }
+  function save(d){ try{ localStorage.setItem(KEY, JSON.stringify(d)); }catch(e){ mem=d; } }
+  var data=load();
+
+  function stamp(){
+    var el=document.getElementById('stStatus');
+    var d=new Date();
+    el.textContent=d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR').slice(0,5);
+  }
+
+  // Modal utilitário (sem alert/confirm/prompt)
+  var ov=document.getElementById('ov'), mT=document.getElementById('mdlTitle'),
+      mB=document.getElementById('mdlBody'), mR=document.getElementById('mdlRow');
+  function modal(opts){
+    mT.textContent=opts.title||'Aviso';
+    mB.innerHTML=opts.body||'';
+    mR.innerHTML='';
+    (opts.buttons||[{t:'OK'}]).forEach(function(b){
+      var btn=document.createElement('button');
+      btn.className='btn '+(b.primary?'btn-green':'');
+      if(!b.primary){btn.style.background='var(--panel2)';btn.style.color='var(--ink)';btn.style.border='1px solid var(--line)';}
+      btn.textContent=b.t;
+      btn.onclick=function(){ if(b.fn) b.fn(); if(!b.keep) ov.classList.remove('show'); };
+      mR.appendChild(btn);
+    });
+    ov.classList.add('show');
+  }
+  ov.addEventListener('click',function(e){ if(e.target===ov) ov.classList.remove('show'); });
+
+  // Restaurar textos + autoavaliação
+  document.querySelectorAll('textarea[data-f]').forEach(function(t){
+    var k=t.getAttribute('data-f');
+    if(data[k]!=null) t.value=data[k];
+    t.addEventListener('input',function(){ data[k]=t.value; save(data); stamp(); checkBlock(t.closest('.pense')); });
+  });
+  document.querySelectorAll('.auto').forEach(function(a){
+    var q=a.closest('.pense').getAttribute('data-q');
+    var key='eval_'+q;
+    a.querySelectorAll('.op').forEach(function(op){
+      if(data[key]===op.getAttribute('data-v')) op.classList.add('sel');
+      op.addEventListener('click',function(){
+        a.querySelectorAll('.op').forEach(function(o){o.classList.remove('sel');});
+        op.classList.add('sel'); data[key]=op.getAttribute('data-v'); save(data); stamp();
+      });
+    });
+  });
+
+  // Habilita "Conferir" só quando todos os textos do bloco têm >=3 chars
+  function checkBlock(block){
+    if(!block) return;
+    var tas=block.querySelectorAll('textarea[data-f]');
+    var ok=true;
+    tas.forEach(function(t){ if(t.value.trim().length<3) ok=false; });
+    var btn=block.querySelector('.btn-green');
+    btn.disabled=!ok;
+  }
+  document.querySelectorAll('.pense').forEach(function(block){
+    checkBlock(block);
+    var btn=block.querySelector('.btn-green');
+    btn.addEventListener('click',function(){
+      if(btn.disabled) return;
+      block.querySelector('.modelo').classList.add('show');
+      btn.style.display='none';
+    });
+  });
+
+  // Linha do tempo -> rolar até a sala
+  document.querySelectorAll('.tlitem[data-go]').forEach(function(it){
+    it.addEventListener('click',function(){
+      var el=document.getElementById(it.getAttribute('data-go'));
+      if(el){ el.scrollIntoView({behavior:'smooth',block:'start'});
+        el.style.transition='box-shadow .4s'; el.style.boxShadow='0 0 0 3px var(--gold)';
+        setTimeout(function(){ el.style.boxShadow='0 12px 30px rgba(0,0,0,.35)'; },1200); }
+    });
+  });
+
+  // API do painel
+  window.LG={
+    export:function(){
+      var txt=JSON.stringify(data,null,2);
+      modal({title:'📥 Exportar respostas', body:'<p style="color:var(--muted);font-size:.9rem">Copie o texto abaixo e guarde. Para restaurar, use "Importar".</p><textarea id="expA" readonly>'+txt.replace(/</g,'&lt;')+'</textarea>',
+        buttons:[{t:'Copiar',primary:true,keep:true,fn:function(){ var ta=document.getElementById('expA'); ta.select(); try{document.execCommand('copy');}catch(e){} }},{t:'Fechar'}]});
+    },
+    import:function(){
+      modal({title:'📤 Importar respostas', body:'<p style="color:var(--muted);font-size:.9rem">Cole aqui o texto exportado e confirme.</p><textarea id="impA" placeholder="Cole o conteúdo..."></textarea>',
+        buttons:[{t:'Confirmar',primary:true,fn:function(){ try{ var o=JSON.parse(document.getElementById('impA').value); data=o; save(data); modal({title:'✔ Pronto',body:'<p>Respostas importadas. A página vai recarregar.</p>',buttons:[{t:'OK',primary:true,fn:function(){location.reload();}}]}); }catch(e){ modal({title:'Ops',body:'<p>Texto inválido. Confira e tente de novo.</p>'}); } }},{t:'Cancelar'}]});
+    },
+    reset:function(){
+      modal({title:'🗑️ Zerar tudo', body:'<p>Isso apaga todas as suas respostas desta Leitura Guiada. Tem certeza?</p>',
+        buttons:[{t:'Sim, zerar',primary:true,fn:function(){ data={}; save(data); location.reload(); }},{t:'Cancelar'}]});
+    }
+  };
+
+  // marca nav ativa por rolagem (simples)
+  stamp();
+})();
+</script>
+</body>
+</html>
