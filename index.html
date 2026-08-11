@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galeria à Meia-Noite — As Artes Visuais (6º ano)</title>
+<style>
+  :root{
+    --bg:#0c0c11;--bg2:#14141d;--panel:#1a1a26;--panel2:#20202f;
+    --ink:#ece7db;--muted:#a49f92;--line:#2c2c3c;--spot:#f0d27a;--gold:#e8c15a;
+    --green:#2f9e6b;--red:#d8433a;--blue:#1c3a63;--purple:#4a2f6b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Segoe UI',system-ui,Arial,sans-serif;
+    background:radial-gradient(1000px 600px at 50% -12%, rgba(240,210,122,.14), transparent 60%),linear-gradient(180deg,#0b0b10,#0c0c11 40%,#0a0a0f);
+    color:var(--ink);line-height:1.6}
+  a{color:var(--spot)}
+  .wrap{max-width:900px;margin:0 auto;padding:0 18px 80px}
+  header.hero{text-align:center;padding:52px 18px 34px;position:relative;overflow:hidden;border-bottom:3px solid var(--gold)}
+  header.hero:before{content:"";position:absolute;left:50%;top:-40px;transform:translateX(-50%);
+    width:520px;height:340px;background:radial-gradient(closest-side, rgba(240,210,122,.28), transparent 70%);filter:blur(6px)}
+  .kicker{position:relative;display:inline-block;background:rgba(0,0,0,.35);border:1px solid var(--gold);color:var(--gold);
+    border-radius:999px;padding:6px 16px;font-size:.8rem;letter-spacing:3px;margin-bottom:14px}
+  header.hero h1{position:relative;margin:.2rem 0;font-size:2.3rem;color:#fff;letter-spacing:.5px}
+  header.hero .sub{position:relative;color:var(--muted);max-width:620px;margin:8px auto 0}
+  header.hero .meta{position:relative;margin-top:14px;color:var(--spot);font-weight:600;font-size:.95rem}
+
+  .lead{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin:28px 0}
+  .lead h2{margin:.1rem 0 .4rem;color:var(--gold)}
+  .rooms{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin:24px 0}
+  .room{display:block;text-decoration:none;color:var(--ink);background:linear-gradient(180deg,var(--panel),var(--bg2));
+    border:1px solid var(--line);border-radius:16px;padding:22px;position:relative;overflow:hidden;transition:.18s;box-shadow:0 12px 30px rgba(0,0,0,.35)}
+  .room:hover{transform:translateY(-3px);border-color:var(--gold)}
+  .room .spot{position:absolute;top:-30px;right:-20px;width:120px;height:120px;border-radius:50%;filter:blur(8px);opacity:.5}
+  .room .n{font-size:.75rem;letter-spacing:2px;color:var(--muted)}
+  .room .ic{font-size:2rem}
+  .room h3{margin:.3rem 0;color:#fff}
+  .room p{margin:.2rem 0 0;color:var(--muted);font-size:.92rem}
+  .room .go{display:inline-block;margin-top:12px;font-weight:700;color:var(--gold)}
+  .r1 .spot{background:var(--green)} .r2 .spot{background:var(--gold)} .r3 .spot{background:var(--purple)} .r4 .spot{background:var(--red)}
+
+  .howto{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin:26px 0}
+  .howto h2{color:var(--gold);margin-top:0}
+  .howto ol{margin:8px 0 0;padding-left:20px}
+  .howto li{margin:8px 0}
+  .tip{background:var(--gold);color:#3a2f05;border-radius:12px;padding:16px 18px;margin:22px 0;font-weight:600}
+  .tip b{color:#6b4e05}
+  footer{color:var(--muted);text-align:center;font-size:.85rem;margin-top:30px}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="kicker">🖼️ GALERIA À MEIA-NOITE</div>
+  <h1>As Artes Visuais</h1>
+  <div class="sub">Um passeio por uma galeria escura: a cada sala, um spot acende sobre uma obra da prova. Estude por aqui e conheça os artistas de perto.</div>
+  <div class="meta">Módulo 2 · 6º ano · Colégio São José · Arte (sem áudio)</div>
+</header>
+<div class="wrap">
+  <div class="lead">
+    <h2>Bem-vindo(a), jovem aprendiz 🕯️</h2>
+    <p>Este kit tem quatro salas. Siga a ordem para render mais: primeiro você <b>lê</b>, depois <b>testa</b> o que entendeu, <b>revisa</b> os pontos fracos e só então enfrenta o <b>simulado</b> valendo. Tudo fica salvo sozinho no seu navegador.</p>
+  </div>
+
+  <div class="rooms">
+    <a class="room r1" href="leitura-guiada.html">
+      <div class="spot"></div>
+      <div class="n">SALA 1</div><div class="ic">📖</div>
+      <h3>Leitura Guiada</h3>
+      <p>Texto por tópico + linha do tempo dos artistas. Pare e pense a cada sala.</p>
+      <span class="go">Entrar →</span>
+    </a>
+    <a class="room r2" href="quiz.html">
+      <div class="spot"></div>
+      <div class="n">SALA 2</div><div class="ic">🎯</div>
+      <h3>Quiz</h3>
+      <p>15 perguntas rápidas. Gera um código <b>MED</b> para o responsável liberar o gabarito.</p>
+      <span class="go">Entrar →</span>
+    </a>
+    <a class="room r3" href="resumo.html">
+      <div class="spot"></div>
+      <div class="n">SALA 3</div><div class="ic">🗺️</div>
+      <h3>Resumo</h3>
+      <p>Cartas para virar, tabelas, post-its e a galeria dos artistas.</p>
+      <span class="go">Entrar →</span>
+    </a>
+    <a class="room r4" href="simulado.html">
+      <div class="spot"></div>
+      <div class="n">SALA 4</div><div class="ic">📝</div>
+      <h3>Simulado</h3>
+      <p>22 questões no estilo da prova, com questões de números romanos. Código <b>SIM</b>.</p>
+      <span class="go">Entrar →</span>
+    </a>
+  </div>
+
+  <div class="howto">
+    <h2>Como usar este material</h2>
+    <ol>
+      <li><b>📖 Leitura Guiada</b> — leia com calma e responda os "Pare e pense".</li>
+      <li><b>🎯 Quiz</b> — teste o que entendeu enquanto está fresco.</li>
+      <li><b>🗺️ Resumo</b> — feche as lacunas que o quiz mostrou.</li>
+      <li><b>📝 Simulado</b> — treine valendo, no estilo da prova.</li>
+    </ol>
+  </div>
+
+  <div class="tip">
+    <b>👩‍👦 Recado para a família:</b> ao terminar o Quiz e o Simulado, o(a) jovem aprendiz recebe um código (<b>MED-XX-YY</b> e <b>SIM-XX-YY</b>). O número do meio (<b>XX</b>) é a quantidade de acertos. Digite o código na própria página para abrir o gabarito comentado — assim você confere junto onde reforçar.
+  </div>
+
+  <footer>Galeria à Meia-Noite · Kit de estudos de Artes · 6º ano — Colégio São José</footer>
+</div>
+</body>
+</html>
