@@ -188,6 +188,18 @@
     ov.classList.add('show'); }
   ov.addEventListener('click',function(e){if(e.target===ov)ov.classList.remove('show');});
 
+  // Embaralha as alternativas de forma FIXA (a mesma ordem toda vez que abrir),
+  // para a resposta certa nao cair sempre na mesma letra.
+  function rng(seed){var s=(seed*9301+49297)%233280;return function(){s=(s*9301+49297)%233280;return s/233280;};}
+  QUESTIONS.forEach(function(item,i){
+    var pares=item.o.map(function(op,j){return {o:op,e:item.e[j],c:(j===item.a)};});
+    var rand=rng(i+7);
+    for(var k=pares.length-1;k>0;k--){var m=Math.floor(rand()*(k+1));var t=pares[k];pares[k]=pares[m];pares[m]=t;}
+    item.o=pares.map(function(p){return p.o;});
+    item.e=pares.map(function(p){return p.e;});
+    for(var z=0;z<pares.length;z++){ if(pares[z].c){ item.a=z; break; } }
+  });
+
   var qDiv=document.getElementById('quiz');
   QUESTIONS.forEach(function(item,i){
     var el=document.createElement('div');el.className='q';el.id='q'+i;
